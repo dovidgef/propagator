@@ -7,6 +7,7 @@ require_once $GLOBALS['THRIFT_ROOT'] . '/packages/hive_service/ThriftHive.php';
 require_once $GLOBALS['THRIFT_ROOT'] . '/transport/TSocket.php';
 require_once $GLOBALS['THRIFT_ROOT'] . '/protocol/TBinaryProtocol.php';
 require_once 'ThriftHiveClientEx.php';
+require_once 'Mapr.php';
 
 /**
  * class DatabaseWrapper
@@ -21,6 +22,7 @@ class DatabaseWrapper {
 
     private $sql_database;
     private $hive_database;
+    private $mapr_database;
 
     /**
      * Constructor.  Initialize the model object
@@ -30,6 +32,7 @@ class DatabaseWrapper {
     function __construct($conf) {
     	$this->sql_database = null;
     	$this->hive_database = null;
+        $this->mapr_database = null;
     	if($conf['database_type'] == 'mysql') {
 	    	$this->sql_database = new medoo(array(
 	    			'database_type' => 'mysql',
@@ -45,6 +48,9 @@ class DatabaseWrapper {
 			$transport->setSendTimeout(600 * 1000);
 			$transport->setRecvTimeout(600 * 1000);
 			$this->hive_database = new ThriftHiveClientEx(new TBinaryProtocol($transport));
+        }
+        if($conf['database_type'] == 'mapr') {
+            $this->mapr_database = new Mapr($conf['host'], $conf['port']);
         }
     }
 
@@ -65,6 +71,12 @@ class DatabaseWrapper {
 			$result = $this->hive_database->fetchAll();
 			$this->hive_database->close();
        	}
+        if ($this->mapr_database) {
+            $this->mapr_database->open();
+            $this->mapr_database->execute($query);
+	        $result = $this->mapr_database->fetchAll();
+            $this->mapr_database->close();
+        }
        	return $result;
     }
 
@@ -95,6 +107,8 @@ class DatabaseWrapper {
     	}
     	if ($this->hive_database) {
     	}
+        if ($this->mapr_database) {
+        }
     }
 }
 

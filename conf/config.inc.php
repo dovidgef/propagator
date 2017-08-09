@@ -13,10 +13,10 @@
 
 $conf['db'] = array(
 	'host'	=> '127.0.0.1',
-	'port'	=> 5532,
+	'port'	=> 3306,
 	'db'	=> 'propagator',
-	'user'	=> 'msandbox',
-	'password' => 'msandbox'
+	'user'	=> 'test_propagator',
+	'password' => 'qpzm1234'
 );
 
 $conf['default_action'] = 'about';
