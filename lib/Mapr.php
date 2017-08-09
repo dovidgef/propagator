@@ -6,6 +6,7 @@
  * Time: 2:09 PM
  */
 
+
 class Mapr
 {
     private $host;
@@ -49,6 +50,7 @@ class Mapr
      */
     public function execute($str) {
         // ex) use my_db; select * from my_db
+        set_error_handler("warning_handler", E_WARNING);
         $queries = preg_split('/;/', $str);
 
         foreach ($queries as $query) {
@@ -64,6 +66,7 @@ class Mapr
                 throw new MaprExecuteException($msg);
             }
         }
+        restore_error_handler();
     }
 
     /**
@@ -87,6 +90,10 @@ class Mapr
 }
 
 class MaprExecuteException extends Exception {
+}
+
+function warning_handler($errno, $errstr) {
+    throw new Exception($errstr, $errno);
 }
 
 //$database = new Mapr('127.0.0.1', '10000');
