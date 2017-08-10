@@ -53,10 +53,10 @@ class DatabaseWrapper {
 			$this->hive_database = new ThriftHiveClientEx(new TBinaryProtocol($transport));
         }
         if($conf['database_type'] == 'mapr') {
-            $this->mapr_database = new Mapr($conf['host'], $conf['port']);
+            $this->mapr_database = new Mapr($conf['host'], $conf['port'], $conf['default_schema']);
         }
         if($conf['database_type'] == 'vertica') {
-            $this->vertica_database = new Vertica($conf['host'], $conf['port']);
+            $this->vertica_database = new Vertica($conf['host'], $conf['port'], $conf['default_schema']);
         }
     }
 

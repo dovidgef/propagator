@@ -15,11 +15,16 @@ class Mapr
     private $host;
     private $port;
     private $conn;
+    private $database;
     private $results_object;
 
-    public function __construct($host, $port) {
+    public function __construct($host, $port, $database="") {
         $this->host = $host;
         $this->port = $port;
+        if ($database == "information_schema"){
+            $database = "";
+        }
+        $this->database = $database;
     }
 
     /**
@@ -29,7 +34,7 @@ class Mapr
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};", 'mapr', 'mapr');
+            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
         }
     }
 
@@ -100,10 +105,10 @@ function mapr_warning_handler($errno, $errstr) {
     throw new Exception($errstr, $errno);
 }
 
-//$database = new Mapr('127.0.0.1', '10000');
+//$database = new Mapr('127.0.0.1', '10000', 'test_mapr');
 //$database->open();
 //echo $database->get_conn();
-//$database->execute("show databases");
+//$database->execute("create table test_database_test_mapr (col_value STRING);");
 //print_r($database->fetchAll());
 //$database->close();
 //echo $database->get_conn();

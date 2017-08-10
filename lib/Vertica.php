@@ -20,6 +20,9 @@ class Vertica
     public function __construct($host, $port, $database="") {
         $this->host = $host;
         $this->port = $port;
+        if ($database == "information_schema"){
+            $database = "";
+        }
         $this->database = $database;
     }
 
@@ -100,7 +103,6 @@ class VerticaExecuteException extends Exception {
 function vertica_warning_handler($errno, $errstr) {
     throw new Exception($errstr, $errno);
 }
-
 
 
 //$database = new Vertica('127.0.0.1', '5433');
