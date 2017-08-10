@@ -8,6 +8,7 @@ require_once $GLOBALS['THRIFT_ROOT'] . '/transport/TSocket.php';
 require_once $GLOBALS['THRIFT_ROOT'] . '/protocol/TBinaryProtocol.php';
 require_once 'ThriftHiveClientEx.php';
 require_once 'Mapr.php';
+require_once 'Vertica.php';
 
 /**
  * class DatabaseWrapper
@@ -23,6 +24,7 @@ class DatabaseWrapper {
     private $sql_database;
     private $hive_database;
     private $mapr_database;
+    private $vertica_database;
 
     /**
      * Constructor.  Initialize the model object
@@ -33,6 +35,7 @@ class DatabaseWrapper {
     	$this->sql_database = null;
     	$this->hive_database = null;
         $this->mapr_database = null;
+        $this->vertica_database = null;
     	if($conf['database_type'] == 'mysql') {
 	    	$this->sql_database = new medoo(array(
 	    			'database_type' => 'mysql',
@@ -51,6 +54,9 @@ class DatabaseWrapper {
         }
         if($conf['database_type'] == 'mapr') {
             $this->mapr_database = new Mapr($conf['host'], $conf['port']);
+        }
+        if($conf['database_type'] == 'vertica') {
+            $this->vertica_database = new Vertica($conf['host'], $conf['port']);
         }
     }
 
@@ -76,6 +82,12 @@ class DatabaseWrapper {
             $this->mapr_database->execute($query);
 	        $result = $this->mapr_database->fetchAll();
             $this->mapr_database->close();
+        }
+        if ($this->vertica_database) {
+            $this->vertica_database->open();
+            $this->vertica_database->execute($query);
+            $result = $this->vertica_database->fetchAll();
+            $this->vertica_database->close();
         }
        	return $result;
     }
@@ -108,6 +120,8 @@ class DatabaseWrapper {
     	if ($this->hive_database) {
     	}
         if ($this->mapr_database) {
+        }
+        if ($this->vertica_database) {
         }
     }
 }

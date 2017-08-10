@@ -1,25 +1,26 @@
 <?php
 /**
- * class Mapr
+ * class Vertica
  *
- * Provides access to Mapr/Hive database
+ * Provides access to Vertica database
  *
  * @author Dovid Gefen <dovidgef>
  * @license Apache 2.0 license.  See LICENSE document for more info
- * @created 2017-08-09
+ * @created 2017-08-10
  */
 
-
-class Mapr
+class Vertica
 {
     private $host;
     private $port;
     private $conn;
+    private $database;
     private $results_object;
 
-    public function __construct($host, $port) {
+    public function __construct($host, $port, $database="") {
         $this->host = $host;
         $this->port = $port;
+        $this->database = $database;
     }
 
     /**
@@ -29,7 +30,7 @@ class Mapr
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};", 'mapr', 'mapr');
+            $this->conn = odbc_connect("Driver={/opt/vertica/lib64/libverticaodbc.so};Host={$this->host};Port={$this->port};Database={$this->database};", 'dbadmin', 'password');
         }
     }
 
@@ -53,7 +54,7 @@ class Mapr
      */
     public function execute($str) {
         // ex) use my_db; select * from my_db
-        set_error_handler("mapr_warning_handler", E_WARNING);
+        set_error_handler("vertica_warning_handler", E_WARNING);
         $queries = preg_split('/;/', $str);
 
         foreach ($queries as $query) {
@@ -65,8 +66,8 @@ class Mapr
                 $this->results_object = odbc_exec($this->conn, $query);
             } catch (Exception $e) {
                 $msg = $e->getMessage();
-                $msg = "MaprExecuteException: Execute Error:: $msg  query:: $query ";
-                throw new MaprExecuteException($msg);
+                $msg = "VerticaExecuteException: Execute Error:: $msg  query:: $query ";
+                throw new VerticaExecuteException($msg);
             }
         }
         restore_error_handler();
@@ -92,18 +93,21 @@ class Mapr
     }
 }
 
-class MaprExecuteException extends Exception {
+class VerticaExecuteException extends Exception {
 }
 
 // Function for changing error handler in order to convert warnings to Exceptions
-function mapr_warning_handler($errno, $errstr) {
+function vertica_warning_handler($errno, $errstr) {
     throw new Exception($errstr, $errno);
 }
 
-//$database = new Mapr('127.0.0.1', '10000');
+
+
+//$database = new Vertica('127.0.0.1', '5433');
 //$database->open();
 //echo $database->get_conn();
-//$database->execute("show databases");
+//$database->execute("SELECT table_name, table_type FROM all_tables
+//          WHERE table_type = 'TABLE' ;");
 //print_r($database->fetchAll());
 //$database->close();
 //echo $database->get_conn();
