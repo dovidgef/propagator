@@ -95,6 +95,12 @@ class Mapr
             return $this->conn;
         }
     }
+
+    public function get_results_object() {
+        if ($this->results_object) {
+            return $this->results_object;
+        }
+    }
 }
 
 class MaprExecuteException extends Exception {
