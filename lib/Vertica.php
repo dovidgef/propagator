@@ -13,13 +13,17 @@ class Vertica
 {
     private $host;
     private $port;
+    private $user;
+    private $password;
     private $conn;
     private $database;
     private $results_object;
 
-    public function __construct($host, $port, $database="") {
+    public function __construct($host, $port, $user, $pass, $database="") {
         $this->host = $host;
         $this->port = $port;
+        $this->user = $user;
+        $this->password = $pass;
         if ($database == "information_schema"){
             $database = "";
         }
@@ -33,7 +37,7 @@ class Vertica
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={/opt/vertica/lib64/libverticaodbc.so};Host={$this->host};Port={$this->port};Database={$this->database};", 'dbadmin', 'password');
+            $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database={$this->database};", "gabi", "gabi@1234");
         }
     }
 
@@ -105,7 +109,7 @@ function vertica_warning_handler($errno, $errstr) {
 }
 
 
-//$database = new Vertica('127.0.0.1', '5433');
+//$database = new Vertica('verticatest.chidc2.outbrain.com', '5433', 'gabi', 'gabi@1234');
 //$database->open();
 //echo $database->get_conn();
 //$database->execute("SELECT table_name, table_type FROM all_tables
