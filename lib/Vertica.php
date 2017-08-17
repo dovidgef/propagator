@@ -37,7 +37,8 @@ class Vertica
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database={$this->database};", $this->user, $this->password);
+//            $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database={$this->database};", $this->user, $this->password);
+            $this->conn = odbc_connect("Driver={/opt/vertica/lib64/libverticaodbc.so};Host={$this->host};Port={$this->port};Database={$this->database};", $this->user, $this->password);
         }
     }
 
