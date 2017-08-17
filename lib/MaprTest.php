@@ -17,7 +17,8 @@ class MaprTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         // Test Mapr object creation
-        $this->testMapr = new Mapr("127.0.0.1", "10000", "mapr", "mapr");
+//        $this->testMapr = new Mapr("127.0.0.1", "10000", "mapr", "mapr");
+        $this->testMapr = new Mapr("10.2.3.124", "10000", "mapr", "mapr");
     }
 
     function testDatabaseConnection(){
