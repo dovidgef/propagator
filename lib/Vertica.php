@@ -37,7 +37,7 @@ class Vertica
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database={$this->database};", "gabi", "gabi@1234");
+            $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database={$this->database};", $this->user, $this->password);
         }
     }
 
@@ -98,6 +98,12 @@ class Vertica
             return $this->conn;
         }
     }
+
+    public function get_results_object() {
+        if ($this->results_object) {
+            return $this->results_object;
+        }
+    }
 }
 
 class VerticaExecuteException extends Exception {
@@ -110,10 +116,26 @@ function vertica_warning_handler($errno, $errstr) {
 
 
 //$database = new Vertica('verticatest.chidc2.outbrain.com', '5433', 'gabi', 'gabi@1234');
+////$database = new Vertica('localhost', '5433', 'dbadmin', 'password');
 //$database->open();
 //echo $database->get_conn();
-//$database->execute("SELECT table_name, table_type FROM all_tables
-//          WHERE table_type = 'TABLE' ;");
+//$database->execute("CREATE TABLE Product_Dimension2 (
+//       Product_Key                    integer NOT NULL,
+//       Product_Description            varchar(128),
+//       SKU_Number                     char(32) NOT NULL,
+//       Category_Description           char(32),
+//       Department_Description         char(32) NOT NULL,
+//       Package_Type_Description       char(32),
+//       Package_Size                   char(32),
+//       Fat_Content                    integer,
+//       Diet_Type                      char(32),
+//       Weight                         integer,
+//       Weight_Units_of_Measure        char(32),
+//       Shelf_Width                    integer,
+//       Shelf_Height                   integer,
+//       Shelf_Depth                    integer
+//)
+//;");
 //print_r($database->fetchAll());
 //$database->close();
 //echo $database->get_conn();

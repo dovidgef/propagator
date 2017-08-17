@@ -14,13 +14,17 @@ class Mapr
 {
     private $host;
     private $port;
+    private $user;
+    private $password;
     private $conn;
     private $database;
     private $results_object;
 
-    public function __construct($host, $port, $database="") {
+    public function __construct($host, $port, $user, $pass, $database="") {
         $this->host = $host;
         $this->port = $port;
+        $this->user = $user;
+        $this->password = $pass;
         if ($database == "information_schema"){
             $database = "";
         }
@@ -34,7 +38,8 @@ class Mapr
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
+//            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
+            $this->conn = odbc_connect("Driver={Cloudera ODBC Driver for Apache Hive};Host={$this->host};Port={$this->port};Schema={$this->database};", $this->user, $this->password);
         }
     }
 
@@ -111,10 +116,10 @@ function mapr_warning_handler($errno, $errstr) {
     throw new Exception($errstr, $errno);
 }
 
-//$database = new Mapr('127.0.0.1', '10000', 'test_mapr');
+//$database = new Mapr('127.0.0.1', '10000', 'mapr', 'mapr');
 //$database->open();
 //echo $database->get_conn();
-//$database->execute("create table test_database_test_mapr (col_value STRING);");
+//$database->execute("show tables");
 //print_r($database->fetchAll());
 //$database->close();
 //echo $database->get_conn();

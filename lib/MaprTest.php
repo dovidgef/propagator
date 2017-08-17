@@ -16,8 +16,8 @@ class MaprTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        // Test Mapr
-        $this->testMapr = new Mapr("127.0.0.1", "10000");
+        // Test Mapr object creation
+        $this->testMapr = new Mapr("127.0.0.1", "10000", "mapr", "mapr");
     }
 
     function testDatabaseConnection(){
@@ -48,8 +48,6 @@ class MaprTest extends PHPUnit_Framework_TestCase
         $this->testMapr->execute("SELECT * FROM students");
         $this->assertCount(2, $this->testMapr->fetchAll());
         $this->testMapr->execute("DROP TABLE IF EXISTS students");
-        // Check if results contain Mapr/Hive default database
-//        $this->assertEquals("default", $this->testMapr->fetchAll()[0]["database_name"]);
         $this->testMapr->close();
     }
 }
