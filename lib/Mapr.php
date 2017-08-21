@@ -38,8 +38,8 @@ class Mapr
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
-//            $this->conn = odbc_connect("Driver={Cloudera ODBC Driver for Apache Hive};Host={$this->host};Port={$this->port};Schema={$this->database};", $this->user, $this->password);
+//            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
+            $this->conn = odbc_connect("Driver={Cloudera ODBC Driver for Apache Hive};Host={$this->host};Port={$this->port};Schema={$this->database};", $this->user, $this->password);
         }
     }
 

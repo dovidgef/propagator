@@ -17,7 +17,8 @@ class VerticaTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         // Test Vertica object creation
-        $this->testVertica = new Vertica("127.0.0.1", "5433", "dbadmin", "password");
+//        $this->testVertica = new Vertica("127.0.0.1", "5433", "dbadmin", "password");
+        $this->testVertica = new Vertica("192.168.3.5", "5433", "dbadmin", "password");
     }
 
     function testDatabaseConnection(){
