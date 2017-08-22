@@ -17,8 +17,7 @@ class VerticaTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         // Test Vertica object creation
-//        $this->testVertica = new Vertica("127.0.0.1", "5433", "dbadmin", "password");
-        $this->testVertica = new Vertica("192.168.3.5", "5433", "dbadmin", "password");
+        $this->testVertica = new Vertica("127.0.0.1", "5433", "dbadmin", "password");
     }
 
     function testDatabaseConnection(){
@@ -36,7 +35,7 @@ class VerticaTest extends PHPUnit_Framework_TestCase
         $this->testVertica->execute("SELECT table_schema FROM v_catalog.tables");
         $this->assertInternalType("resource", $this->testVertica->get_results_object());
         // Check if results contain Mapr/Hive default database
-        $this->assertEquals("public", $this->testVertica->fetchAll()[0]["table_schema"]);
+        $this->assertEquals("outbrain", $this->testVertica->fetchAll()[0]["table_schema"]);
         $this->testVertica->close();
     }
 

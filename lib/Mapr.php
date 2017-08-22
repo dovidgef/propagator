@@ -25,6 +25,7 @@ class Mapr
         $this->port = $port;
         $this->user = $user;
         $this->password = $pass;
+        // Override default database schema when left blank
         if ($database == "information_schema"){
             $database = "";
         }
@@ -38,7 +39,9 @@ class Mapr
      */
     public function open() {
         if (!$this->conn) {
-//            $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
+            // Linux DSN
+            // $this->conn = odbc_connect("Driver={/opt/cloudera/hiveodbc/lib/64/libclouderahiveodbc64.so};Host={$this->host};Port={$this->port};Schema={$this->database};", 'mapr', 'mapr');
+            // Mac DSN
             $this->conn = odbc_connect("Driver={Cloudera ODBC Driver for Apache Hive};Host={$this->host};Port={$this->port};Schema={$this->database};", $this->user, $this->password);
         }
     }
@@ -115,11 +118,3 @@ class MaprExecuteException extends Exception {
 function mapr_warning_handler($errno, $errstr) {
     throw new Exception($errstr, $errno);
 }
-
-//$database = new Mapr('127.0.0.1', '10000', 'mapr', 'mapr');
-//$database->open();
-//echo $database->get_conn();
-//$database->execute("show tables");
-//print_r($database->fetchAll());
-//$database->close();
-//echo $database->get_conn();

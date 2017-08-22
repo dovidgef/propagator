@@ -125,14 +125,4 @@ class DatabaseWrapper {
         }
     }
 }
-//$database_wrapper = new DatabaseWrapper(array(
-//    'database_type' => 'vertica',
-//    'default_schema' => "",
-//    'host' => "verticatest.chidc2.outbrain.com",
-//    'port' => 5433,
-//    'user' => "gabi",
-//    'password' => "gabi@1234"
-//));
-//$database_wrapper->execute("SELECT table_name, table_type FROM all_tables
-//         WHERE table_type = 'TABLE' ;")
 ?>

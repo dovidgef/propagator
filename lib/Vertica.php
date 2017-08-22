@@ -16,18 +16,19 @@ class Vertica
     private $user;
     private $password;
     private $conn;
-    private $database;
+    private $schema;
     private $results_object;
 
-    public function __construct($host, $port, $user, $pass, $database="") {
+    public function __construct($host, $port, $user, $pass, $schema="") {
         $this->host = $host;
         $this->port = $port;
         $this->user = $user;
         $this->password = $pass;
-        if ($database == "information_schema"){
-            $database = "";
+        // Override default database schema when left blank
+        if ($schema == "information_schema"){
+            $schema = "";
         }
-        $this->database = $database;
+        $this->schema = $schema;
     }
 
     /**
@@ -37,8 +38,16 @@ class Vertica
      */
     public function open() {
         if (!$this->conn) {
-            $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database={$this->database};", $this->user, $this->password);
-//            $this->conn = odbc_connect("Driver={/opt/vertica/lib64/libverticaodbc.so};Host={$this->host};Port={$this->port};Database={$this->database};", $this->user, $this->password);
+            if($this->schema){
+                $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database=;ConnSettings=SET SEARCH_PATH TO {$this->schema}", $this->user, $this->password);
+                // Linux DSN
+                // $this->conn = odbc_connect("Driver={/opt/vertica/lib64/libverticaodbc.so};Host={$this->host};Port={$this->port};Database=;ConnSettings=SET SEARCH_PATH TO {$this->schema}", $this->user, $this->password);
+            }
+            else {
+                $this->conn = odbc_connect("Driver={Vertica};Host={$this->host};Port={$this->port};Database=;", $this->user, $this->password);
+                // Linux DSN
+                // $this->conn = odbc_connect("Driver={/opt/vertica/lib64/libverticaodbc.so};Host={$this->host};Port={$this->port};Database=;", $this->user, $this->password);
+            }
         }
     }
 
@@ -114,29 +123,3 @@ class VerticaExecuteException extends Exception {
 function vertica_warning_handler($errno, $errstr) {
     throw new Exception($errstr, $errno);
 }
-
-
-//$database = new Vertica('verticatest.chidc2.outbrain.com', '5433', 'gabi', 'gabi@1234');
-////$database = new Vertica('localhost', '5433', 'dbadmin', 'password');
-//$database->open();
-//echo $database->get_conn();
-//$database->execute("CREATE TABLE Product_Dimension2 (
-//       Product_Key                    integer NOT NULL,
-//       Product_Description            varchar(128),
-//       SKU_Number                     char(32) NOT NULL,
-//       Category_Description           char(32),
-//       Department_Description         char(32) NOT NULL,
-//       Package_Type_Description       char(32),
-//       Package_Size                   char(32),
-//       Fat_Content                    integer,
-//       Diet_Type                      char(32),
-//       Weight                         integer,
-//       Weight_Units_of_Measure        char(32),
-//       Shelf_Width                    integer,
-//       Shelf_Height                   integer,
-//       Shelf_Depth                    integer
-//)
-//;");
-//print_r($database->fetchAll());
-//$database->close();
-//echo $database->get_conn();
